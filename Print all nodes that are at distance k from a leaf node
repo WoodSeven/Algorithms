@@ -1,0 +1,64 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+class TreeNode
+{
+    public:
+    TreeNode* left;
+    TreeNode* right;
+    int val;
+    TreeNode(int x):val(x){
+        this->left = NULL;
+        this ->right = NULL;
+    }
+};
+TreeNode* newNode(int k)
+{
+    TreeNode* node = new TreeNode(k);
+    return node;
+}
+void pleaf(TreeNode* root,int k,vector<TreeNode*>vec,vector<TreeNode*>&printed)
+{
+    if(!root)return;
+    vec.push_back(root);
+    if(!root->left && !root ->right){
+        if(vec.size() < k)return;
+        else
+        {
+            TreeNode* node = vec[vec.size() - k -1];
+            if(find(printed.begin(),printed.end(),node) == printed.end()){
+                cout<<node ->val<<endl;
+                printed.push_back(node);
+            }
+        }
+    }
+    pleaf(root->left,k,vec,printed);
+    pleaf(root->right,k,vec,printed);
+}
+
+void pleaf(TreeNode* root,int k)
+{
+    if(!root)return;
+    vector<TreeNode*>vec;
+    vector<TreeNode*>printed;
+    pleaf(root,k,vec,printed);
+    //cout<<printed.size()<<endl;
+}
+
+int main()
+{
+    TreeNode * root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+    root->right->left = newNode(6);
+    root->right->right = newNode(7);
+    root->right->left->right = newNode(8);
+
+    cout << "Nodes at distance 2 are: ";
+    pleaf(root, 2);
+
+    return 0;
+}
