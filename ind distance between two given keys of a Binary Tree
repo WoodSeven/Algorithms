@@ -1,0 +1,74 @@
+#include<iostream>
+#include<algorithm>
+#include<list>
+using namespace std;
+class TreeNode
+{
+    public:
+    TreeNode* left;
+    TreeNode* right;
+    int val;
+    TreeNode(int x):val(x){
+        this->left = NULL;
+        this ->right = NULL;
+    }
+};
+TreeNode* newNode(int k)
+{
+    TreeNode* node = new TreeNode(k);
+    return node;
+}
+bool findDistance(TreeNode* root,int n1,list<TreeNode*>&q1)
+{
+    if(!root)return false;
+    q1.push_back(root);
+    if(root ->val == n1)return true;
+    if((root->left && findDistance(root->left,n1,q1)) || (root->right && findDistance(root->right,n1,q1)))
+        return true;
+    q1.pop_back();
+    return false;
+}
+void findDistance(list<TreeNode*>&q1,list<TreeNode*>&q2,int &res)
+{
+    while(!q1.empty() || !q2.empty())
+    {
+        if(q1.front() == q2.front())
+        {
+            q1.pop_front();
+            q2.pop_front();
+        }
+        else {
+            res=q1.size()+q2.size();
+            return;
+        }
+    }
+}
+int findDistance(TreeNode* root,int n1,int n2)
+{
+    if(!root || n1 == n2)return 0;
+    list<TreeNode*>q1;
+    list<TreeNode*>q2;
+    int res = 0;
+    findDistance(root,n1,q1);
+    findDistance(root,n2,q2);
+    findDistance(q1,q2,res);
+    return res;
+}
+int main()
+{
+    // Let us create binary tree given in the above example
+    TreeNode * root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+    root->right->left = newNode(6);
+    root->right->right = newNode(7);
+    root->right->left->right = newNode(8);
+    cout << "Dist(4, 5) = " << findDistance(root, 4, 5);
+    cout << "\nDist(4, 6) = " << findDistance(root, 4, 6);
+    cout << "\nDist(3, 4) = " << findDistance(root, 3, 4);
+    cout << "\nDist(2, 4) = " << findDistance(root, 2, 4);
+    cout << "\nDist(8, 5) = " << findDistance(root, 8, 5);
+    return 0;
+}
